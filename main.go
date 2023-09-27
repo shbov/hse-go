@@ -2,11 +2,11 @@ package main
 
 import (
 	"fmt"
-	"hw-1/Interfaces"
+	"hw-1/Generators"
 	"hw-1/Structs"
 )
 
-func testLibrary(library Interfaces.LibraryInterface, books []Structs.Book) {
+func testLibrary(library *Structs.Library, books []Structs.Book) {
 	fmt.Printf("Testing library %T\n", library)
 
 	// adding books to the library
@@ -32,14 +32,22 @@ func testLibrary(library Interfaces.LibraryInterface, books []Structs.Book) {
 
 func main() {
 	// create library
-	var library Interfaces.LibraryInterface
-	library = Structs.CreateMapLibrary()
+	library := Structs.NewLibrary(Structs.NewMapStorage(), Generators.NewSlugGenerator())
 
 	// create slice of books
 	var books []Structs.Book
-	books = append(books, Structs.CreateBook("Книга 1", "Автор 1"))
-	books = append(books, Structs.CreateBook("Книга 2", "Автор 1"))
-	books = append(books, Structs.CreateBook("Книга 3", "Автор 2"))
+	books = append(books, Structs.CreateDefaultBook(
+		"Книга 1",
+		"Автор 1",
+	))
+	books = append(books, Structs.CreateDefaultBook(
+		"Книга 2",
+		"Автор 1",
+	))
+	books = append(books, Structs.CreateDefaultBook(
+		"Книга 3",
+		"Автор 1",
+	))
 
 	// test library with map-based storage system
 	testLibrary(library, books)
@@ -47,6 +55,6 @@ func main() {
 	fmt.Println()
 
 	// test library with slice-based storage system
-	library = Structs.CreateSliceLibrary()
+	library = Structs.NewLibrary(Structs.NewSliceStorage(), Generators.NewSlugGenerator())
 	testLibrary(library, books)
 }
