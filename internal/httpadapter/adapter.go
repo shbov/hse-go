@@ -82,16 +82,22 @@ var (
 // @x-extension-openapi {"example": "value on a json format"}
 
 type adapter struct {
-	config *Config
-
+	config      *Config
 	authService service.Auth
+	server      *http.Server
+}
 
-	server *http.Server
+func testFunc(ctx context.Context) {
+	_, span := tracer.Start(ctx, "test func")
+	defer span.End()
 }
 
 func (a *adapter) Error(w http.ResponseWriter, r *http.Request) {
-	err := errors.New("oops... one more error")
+	_, span := tracer.Start(r.Context(), "error")
+	defer span.End()
 
+	testFunc(r.Context())
+	err := errors.New("oops... one more error")
 	if err != nil {
 		writeError(w, err)
 	}
@@ -296,7 +302,7 @@ func initTracerProvider() func() {
 		resource.WithTelemetrySDK(),
 		resource.WithHost(),
 		resource.WithAttributes(
-			semconv.ServiceNameKey.String("demo-client"),
+			semconv.ServiceNameKey.String("task 4"),
 		),
 	)
 	if err != nil {
