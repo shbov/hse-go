@@ -3,10 +3,9 @@ package userrepo
 import (
 	"context"
 	"database/sql"
-	"log"
-
 	"github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
+	"github.com/juju/zaputil/zapctx"
 	"golang.org/x/crypto/bcrypt"
 
 	"github.com/anonimpopov/hw4/internal/model"
@@ -74,17 +73,17 @@ func (r *userRepo) ValidateUser(ctx context.Context, login, password string) (*m
 	return user, nil
 }
 
-func New(config *service.AuthConfig, pgxPool *pgxpool.Pool) (repo.User, error) {
+func New(ctx context.Context, config *service.AuthConfig, pgxPool *pgxpool.Pool) (repo.User, error) {
+	lg := zapctx.Logger(ctx)
 	r := &userRepo{
 		pgxPool: pgxPool,
 	}
 
-	ctx := context.Background()
-
+	ctx = context.Background()
 	err := r.pgxPool.BeginFunc(ctx, func(tx pgx.Tx) error {
 		for _, user := range config.Users {
 			if err := r.AddUser(ctx, user.Login, user.Pasword, user.Email); err != nil {
-				log.Fatal(err.Error())
+				lg.Fatal(err.Error())
 			}
 		}
 

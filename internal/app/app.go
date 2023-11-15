@@ -3,7 +3,7 @@ package app
 import (
 	"context"
 	"fmt"
-	"log"
+	"github.com/juju/zaputil/zapctx"
 	"net/http"
 	"os"
 	"os/signal"
@@ -30,14 +30,15 @@ type app struct {
 	httpAdapter httpadapter.Adapter
 }
 
-func (a *app) Serve() error {
+func (a *app) Serve(ctx context.Context) error {
+	lg := zapctx.Logger(ctx)
 	done := make(chan os.Signal, 1)
 
 	signal.Notify(done, syscall.SIGTERM, syscall.SIGINT)
 
 	go func() {
 		if err := a.httpAdapter.Serve(); err != nil && err != http.ErrServerClosed {
-			log.Fatal(err.Error())
+			lg.Fatal(err.Error())
 		}
 	}()
 
@@ -55,13 +56,13 @@ func (a *app) Shutdown() {
 	a.httpAdapter.Shutdown(ctx)
 }
 
-func New(config *Config) (App, error) {
+func New(ctx context.Context, config *Config) (App, error) {
 	pgxPool, err := initDB(context.Background(), &config.Database)
 	if err != nil {
 		return nil, err
 	}
 
-	userRepo, err := userrepo.New(&config.Auth, pgxPool)
+	userRepo, err := userrepo.New(ctx, &config.Auth, pgxPool)
 	if err != nil {
 		return nil, err
 	}

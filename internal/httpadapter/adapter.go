@@ -68,7 +68,7 @@ type adapter struct {
 	server *http.Server
 }
 
-// Auth godoc
+// Login Auth godoc
 // @Summary authorize login and password
 // @Description authorize user by login and password
 // @Accept json
