@@ -68,7 +68,7 @@ paths:
       description: logout user
       responses:
         "200":
-          description: ""
+          description: OK
       summary: logout user
   /validate:
     post:
@@ -95,7 +95,7 @@ securityDefinitions:
   BasicAuth:
     type: basic
   OAuth2AccessCode:
-    authorizationUrl: https://example.com/oauth/authorize
+    authorizationUrl: https://example.com/oauthorize
     flow: accessCode
     scopes:
       admin: ' Grants read and write access to administrative information'
@@ -109,7 +109,7 @@ securityDefinitions:
     tokenUrl: https://example.com/oauth/token
     type: oauth2
   OAuth2Implicit:
-    authorizationUrl: https://example.com/oauth/authorize
+    authorizationUrl: https://example.com/oauthorize
     flow: implicit
     scopes:
       admin: ' Grants read and write access to administrative information'
@@ -121,7 +121,7 @@ securityDefinitions:
       admin: ' Grants read and write access to administrative information'
       read: ' Grants read access'
       write: ' Grants write access'
-    tokenUrl: /auth/v1/login
+    tokenUrl: /v1/login
     type: oauth2
 swagger: "2.0"
 x-extension-openapi:

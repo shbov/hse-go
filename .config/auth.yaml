@@ -2,7 +2,7 @@ app:
   debug: true
   shutdown_timeout: 22s
 database:
-  dsn: postgres://usr:authpwd@localhost:5632/auth?sslmode=disable
+  dsn: postgres://usr:authpwd@0.0.0.0:5632/auth?sslmode=disable
   migrations_dir: "file://../../migrations/auth"
 http:
   serve_address: localhost:8626

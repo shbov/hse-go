@@ -22,7 +22,7 @@ func getConfigPath() string {
 }
 
 func main() {
-	lg, err := logger.GetLogger(false, DSN, "production")
+	lg, err := logger.GetLogger(true, DSN, "development")
 	if err != nil {
 		log.Fatal(err.Error())
 	}

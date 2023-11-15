@@ -37,7 +37,7 @@ func (a *app) Serve(ctx context.Context) error {
 	signal.Notify(done, syscall.SIGTERM, syscall.SIGINT)
 
 	go func() {
-		if err := a.httpAdapter.Serve(); err != nil && err != http.ErrServerClosed {
+		if err := a.httpAdapter.Serve(ctx); err != nil && err != http.ErrServerClosed {
 			lg.Fatal(err.Error())
 		}
 	}()
